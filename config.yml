@@ -1,0 +1,127 @@
+model:
+  base_model_path: /data3/nlp_models/chatglm3-6b
+  pre_seq_len: 128
+  use_fast_tokenizer: true
+  revision: main
+  use_auth_token: false
+  prefix_projection: false
+  ptuning_checkpoint:
+  config_name:
+  tokenizer_name:
+  cache_dir:
+  resize_position_embeddings:
+  quantization_bit:
+
+
+data:
+  train_file: data/cqc004.json
+  train_format: input-output  # 可选值: multi-turn
+  finetune_type: p_tuning  # 可选值: lora_tuning
+  max_seq_length: 1024
+  max_source_length: 1024
+  max_target_length: 128
+  overwrite_cache: false
+  preprocessing_num_workers: 1
+  pad_to_max_length: false
+  max_train_samples:
+
+
+train_args:
+  output_dir: finetune_ckpt
+  logging_dir: logs
+  report_to: none
+  resume_from_checkpoint:
+  overwrite_output_dir: false
+  prediction_loss_only: false
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 4
+  ddp_find_unused_parameters: false
+  save_safetensors: false
+  seed: 42
+  fp16: false
+  bf16: false
+  local_rank: 8
+  max_steps: 1000
+  save_steps: 200
+  logging_steps: 100
+  learning_rate: 1e-4
+  warmup_steps: 0
+  do_train: true
+  do_eval: false
+  do_predict: false
+  num_train_epochs: 20
+  # 不常用参数
+  evaluation_strategy: "no"  # 其他可选值: steps/ epoch
+  logging_strategy: "steps"  # 其他可选值: steps/ epoch
+  save_strategy: "steps"  # 其他可选值: steps/ epoch
+  save_on_each_node: false
+  jit_mode_eval: false
+  use_ipex: false
+  no_cuda: false
+  log_level: passive
+  warmup_ratio: 0.0
+  log_level_replica: warning
+  log_on_each_node: true
+  logging_first_step: false
+  logging_nan_inf_filter: true
+  per_device_eval_batch_size:
+  eval_accumulation_steps:
+  eval_delay:
+  weight_decay:
+  adam_beta1:
+  adam_beta2:
+  adam_epsilon:
+  max_grad_norm:
+  data_seed:
+  lr_scheduler_type:
+  save_total_limit:
+  fp16_opt_level: "O1"
+  fp16_backend: auto
+  half_precision_backend: auto
+  bf16_full_eval: false
+  fp16_full_eval: false
+  ddp_backend:
+  tpu_num_cores:
+  dataloader_drop_last: false
+  eval_steps:
+  dataloader_num_workers: 0
+  past_index: -1
+  run_name:
+  disable_tqdm:
+  remove_unused_columns: true
+  load_best_model_at_end: false
+  metric_for_best_model:
+  greater_is_better:
+  ignore_data_skip: false
+  sharded_ddp: false
+  fsdp: false
+  fsdp_config:
+  label_names:
+  tf32:
+  deepspeed:
+  label_smoothing_factor: 0.0
+  debug: ""
+  optim: adamw_hf
+  optim_args:
+  group_by_length: false
+  length_column_name: length
+  ddp_bucket_cap_mb:
+  ddp_broadcast_buffers:
+  dataloader_pin_memory: true
+  skip_memory_metrics: true
+  push_to_hub: false
+  hub_model_id:
+  hub_strategy: every_save
+  hub_token:
+  hub_private_repo: false
+  gradient_checkpointing: false
+  include_inputs_for_metrics: false
+  auto_find_batch_size: false
+  full_determinism: false
+  torchdynamo:
+  ray_scope: last
+  ddp_timeout: 1800
+  use_mps_device: false
+  torch_compile: false
+  torch_compile_backend:
+  torch_compile_mode:
