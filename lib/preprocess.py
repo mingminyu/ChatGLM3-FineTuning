@@ -1,8 +1,8 @@
-import torch
 from copy import deepcopy
 from typing import Dict, List, Optional, Tuple
-from .tokenization_chatglm import ChatGLMTokenizer
 from torch.utils.data import Dataset
+
+from .tokenization_chatglm import ChatGLMTokenizer
 
 
 """
@@ -14,16 +14,17 @@ TODO: 代码中还有对工具调用的数据格式的调整，这里暂时用�
 
 
 def sanity_check(
-        tokens: List[int],
-        target: List[int],
-        tokenizer: ChatGLMTokenizer
+    tokens: List[int],
+    target: List[int],
+    tokenizer: ChatGLMTokenizer
 ) -> None:
     print("<<<<<<<<<<<<< Sanity Check >>>>>>>>>>>>>")
     for t, m in zip(tokens, target):
         decoded = (
             tokenizer.tokenizer.index_special_tokens[t]
             if t in tokenizer.tokenizer.index_special_tokens else tokenizer.decode([t])
-                   )
+            )
+
         if t != 0:
             print("%20s: %6d -> %6d" % (repr(decoded), t, m))
 
@@ -33,11 +34,11 @@ def sanity_check(
 
 class InputOutputDataset(Dataset):
     def __init__(
-            self,
-            data: List[dict],
-            tokenizer: ChatGLMTokenizer,
-            max_source_length: int,
-            max_target_length: int
+        self,
+        data: List[dict],
+        tokenizer: ChatGLMTokenizer,
+        max_source_length: int,
+        max_target_length: int
     ):
         super(InputOutputDataset, self).__init__()
         self.tokenizer = tokenizer

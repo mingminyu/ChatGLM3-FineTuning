@@ -1,4 +1,4 @@
-model:
+model_args:
   base_model_path: /data3/nlp_models/chatglm3-6b
   pre_seq_len: 128
   use_fast_tokenizer: true
@@ -11,9 +11,12 @@ model:
   cache_dir:
   resize_position_embeddings:
   quantization_bit:
+  local_rank: 8
+  lora_alpha: 32
+  lora_dropout: 0.1
 
 
-data:
+data_args:
   train_file: data/cqc004.json
   train_format: input-output  # 可选值: multi-turn
   finetune_type: p_tuning  # 可选值: lora_tuning
@@ -30,7 +33,7 @@ train_args:
   output_dir: finetune_ckpt
   logging_dir: logs
   report_to: none
-  resume_from_checkpoint:
+  resume_from_checkpoint: true
   overwrite_output_dir: false
   prediction_loss_only: false
   per_device_train_batch_size: 1
@@ -44,10 +47,10 @@ train_args:
   max_steps: 1000
   save_steps: 200
   logging_steps: 100
-  learning_rate: 1e-4
+  learning_rate: 0.0001
   warmup_steps: 0
   do_train: true
-  do_eval: false
+  do_eval: true
   do_predict: false
   num_train_epochs: 20
   # 不常用参数
@@ -64,8 +67,42 @@ train_args:
   log_on_each_node: true
   logging_first_step: false
   logging_nan_inf_filter: true
+  fp16_opt_level: "O1"
+  fp16_backend: auto
+  half_precision_backend: auto
+  bf16_full_eval: false
+  fp16_full_eval: false
+  dataloader_drop_last: false
+  remove_unused_columns: true
+  load_best_model_at_end: false
+  past_index: -1
+  dataloader_num_workers: 0
+  ignore_data_skip: false
+  fsdp: false
+  debug: ""
+  optim: adamw_hf
+  label_smoothing_factor: 0.0
+  group_by_length: false
+  length_column_name: length
+  dataloader_pin_memory: true
+  skip_memory_metrics: true
+  push_to_hub: false
+  hub_strategy: every_save
+  hub_private_repo: false
+  gradient_checkpointing: false
+  include_inputs_for_metrics: false
+  auto_find_batch_size: false
+  full_determinism: false
+  ray_scope: last
+  ddp_timeout: 1800
+  use_mps_device: false
+  torch_compile: false
+  lr_scheduler_type: linear
+  deepspeed: deepspeed.json
   per_device_eval_batch_size:
   eval_accumulation_steps:
+  hub_model_id:
+  optim_args:
   eval_delay:
   weight_decay:
   adam_beta1:
@@ -73,55 +110,33 @@ train_args:
   adam_epsilon:
   max_grad_norm:
   data_seed:
-  lr_scheduler_type:
   save_total_limit:
-  fp16_opt_level: "O1"
-  fp16_backend: auto
-  half_precision_backend: auto
-  bf16_full_eval: false
-  fp16_full_eval: false
   ddp_backend:
   tpu_num_cores:
-  dataloader_drop_last: false
   eval_steps:
-  dataloader_num_workers: 0
-  past_index: -1
   run_name:
   disable_tqdm:
-  remove_unused_columns: true
-  load_best_model_at_end: false
   metric_for_best_model:
   greater_is_better:
-  ignore_data_skip: false
-  sharded_ddp: false
-  fsdp: false
   fsdp_config:
   label_names:
   tf32:
-  deepspeed:
-  label_smoothing_factor: 0.0
-  debug: ""
-  optim: adamw_hf
-  optim_args:
-  group_by_length: false
-  length_column_name: length
   ddp_bucket_cap_mb:
   ddp_broadcast_buffers:
-  dataloader_pin_memory: true
-  skip_memory_metrics: true
-  push_to_hub: false
-  hub_model_id:
-  hub_strategy: every_save
   hub_token:
-  hub_private_repo: false
-  gradient_checkpointing: false
-  include_inputs_for_metrics: false
-  auto_find_batch_size: false
-  full_determinism: false
   torchdynamo:
-  ray_scope: last
-  ddp_timeout: 1800
-  use_mps_device: false
-  torch_compile: false
   torch_compile_backend:
   torch_compile_mode:
+
+infer_args:
+  base_model_path: /data3/nlp_models/chatglm3-6b
+  load_in_8bit: false
+  max_new_tokens: 128
+  inference_type: p_tuning  # 可选值: lora_tuning
+  pt_checkpoint:
+  pre_seq_len: 128
+  lora_checkpoint:
+  local_rank: 8
+  lora_alpha: 32
+  lora_dropout: 0.1
+  device: cuda

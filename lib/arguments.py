@@ -26,6 +26,7 @@ class ModelArguments(BaseModel):
 
 class DataTrainingArguments(BaseModel):
     train_file: str
+    eval_file: Optional[str] = None
     train_format: Literal["multi-turn", "input-output"]  # 微调的数据格式
     finetune_type: Literal["p_tuning", "lora_tuning"] = "p_tuning"
     max_seq_length: Optional[int] = 1024  # 输入序列的最大长度，超过则会被截断，少于则会被填充
@@ -36,4 +37,18 @@ class DataTrainingArguments(BaseModel):
     pad_to_max_length: Optional[bool] = False  # 是否将输入序列填充到最大长度，为 False 时则在每个 batch 会动态填充
     max_train_samples: Optional[int] = None
 
+
+
+class InferenceArguments(BaseModel):
+    base_model_path: str = "THUDM/chatglm3-6b"
+    load_in_8bit: Optional[bool] = False
+    max_new_tokens: Optional[int] = 128
+    inference_type: Literal["p_tuning", "lora_tuning"] = "p_tuning"
+    pt_checkpoint: Optional[str] = None
+    pre_seq_len: Optional[int] = 128
+    lora_checkpoint: Optional[str] = None
+    lora_rank: Optional[int] = 8  # 平衡模型的复杂度和灵活度，更大 rank 值可以使模型适配更好，但会消耗更多计算资源
+    lora_alpha: Optional[int] = 32  # 更大值意味着调整权重更大，但有过拟合的风险
+    lora_dropout: Optional[float] = 0.1  # 提高模型泛化的参数
+    device: Literal["cpu", "cuda"] = "cuda"
 
